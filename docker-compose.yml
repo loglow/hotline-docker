@@ -2,27 +2,33 @@ version: '3'
 
 services:
     app:
-        build:
-            context: .
-            dockerfile: ./Dockerfile
-        image: hotline-docker
+        build: .
         ports:
             - 8080:80
-        volumes:
-            - ./hotline:/hotline
         links:
             - mysql
         environment:
             DB_HOST: mysql
             DB_DATABASE: hotline_docker
-            DB_USERNAME: temp_username
-            DB_PASSWORD: temp_password
+            DB_USERNAME: hotline
+            DB_PASSWORD: password
+
     mysql:
         image: mysql:5.7
         ports:
-            - 13306:3306
+            - 3306:3306
         environment:
             MYSQL_DATABASE: hotline_docker
-            MYSQL_USER: temp_username
-            MYSQL_PASSWORD: temp_password
-            MYSQL_ROOT_PASSWORD: temp_password
+            MYSQL_USER: hotline
+            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: password
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+        ports:
+            - 8081:80
